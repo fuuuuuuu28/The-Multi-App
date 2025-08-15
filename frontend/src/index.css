@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+html, body, #root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow-x: hidden; /* Ẩn scroll ngang */
+}
+
+body {
+  overflow-y: auto; /* Chỉ xuất hiện scroll dọc khi cần */
+}
+
+* {
+  box-sizing: border-box;
+}
+@keyframes spinSlow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.spin-slow {
+  animation: spinSlow 8s linear infinite;
+  animation-play-state:running;
+}
+
+.spin-slow.paused{
+  animation-play-state:paused;
+}
