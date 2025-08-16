@@ -1,5 +1,4 @@
-import React from "react";
-import type { FilterType } from "./Stats";
+import type { FilterType } from "./TodoPage";
 
 type Props = {
   filter: FilterType;

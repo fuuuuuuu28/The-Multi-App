@@ -77,7 +77,7 @@ export const useTodoStore = create<TodoStore>((set) => ({
   deleteTodo:async(id) =>{
     set({isLoading:true, error:null})
     try {
-      const res = await axiosInstance.delete(`/todo/delete/${id}`)
+      await axiosInstance.delete(`/todo/delete/${id}`)
 
       set((state) =>({
         tasks: state.tasks.filter((t) => t._id !== id ),

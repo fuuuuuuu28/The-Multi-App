@@ -1,9 +1,8 @@
 import { Button } from '@/components/ui/button'
 import { useSignIn } from '@clerk/clerk-react'
-import React from 'react'
 
 const SignInOAuth = () => {
-    const { signIn, isLoaded } = useSignIn()
+    const { signIn } = useSignIn()
     const signInWithGG = () =>{
         signIn?.authenticateWithRedirect({
             strategy:"oauth_google",

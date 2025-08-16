@@ -1,13 +1,5 @@
-import {
-  ArrowLeft,
-  MessageCircleMore,
-  MoreVertical,
-  Phone,
-  Search,
-  User,
-  Video,
-} from "lucide-react";
-import React, { useEffect, useState } from "react";
+import { ArrowLeft, MoreVertical, Phone, Search, Video } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useUser } from "@clerk/clerk-react";
 import { useChatStore } from "@/stores/useChatStore";
@@ -39,7 +31,9 @@ const ChatPage = () => {
 
   useEffect(() => {
     // setSelectedUser(user?.id)
-    fetchMessages(selectedUser?.clerkId);
+    if (selectedUser?.clerkId) {
+      fetchMessages(selectedUser.clerkId);
+    }
   }, [fetchMessages, selectedUser]);
   return (
     <div className=" rounded-2xl gap-3 py-3">

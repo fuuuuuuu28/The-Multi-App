@@ -1,16 +1,13 @@
-import React, { useEffect, useState } from "react";
-import type { TodoType } from "@/types";
+import { useEffect, useState } from "react";
 import TodoForm from "./TodoForm";
 import Stats from "./Stats";
 import FilterTodos from "./FilterTodos";
 import TodoList from "./TodoList";
-import { ClipboardList } from "lucide-react";
 import { useTodoStore } from "@/stores/useTodoStore";
 
 export type FilterType = "all" | "active" | "completed";
 
 const TodoPage = () => {
-  const [todos, setTodos] = useState<TodoType[]>([]);
   const [filter, setFilter] = useState<FilterType>("all");
 
   const { addTodo,tasks,getTasks, toggleTodo, deleteTodo } = useTodoStore();

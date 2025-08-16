@@ -1,26 +1,24 @@
 import { axiosInstance } from "@/lib/axios";
-import type { MessageType } from "@/types";
-import type { UserType } from "@/types";
-import { useEffect } from "react";
+import type { MessageType, UserType } from "@/types";
 import { io } from "socket.io-client";
 import { create } from "zustand";
 
 interface ChatStore {
   isLoading: boolean;
   error: string | null;
-  users: User[] ;
+  users: UserType[] ;
   socket: any;
   isConnected: boolean;
   onlineUsers: Set<string>;
   messages: MessageType[];
-  selectedUser: User | null;
+  selectedUser: UserType | null;
 
   fetchUser: () => Promise<void>;
   initialSocket: (userId: string) => Promise<void>;
   disconnected: () => void;
   sendMessage: (senderId: string, content: string, receiverId:string) => void;
   fetchMessages:(userId:string) =>Promise<void>;
-  setSelectedUser: (user:User | null) => void;
+  setSelectedUser: (user:UserType | null) => void;
 }
 const socket = io("http://localhost:5000", {
   withCredentials: true,

@@ -1,6 +1,5 @@
 import {
   Disc3,
-  Music,
   Pause,
   Play,
   Plus,
@@ -13,7 +12,7 @@ import {
   Volume2,
   VolumeOff,
 } from "lucide-react";
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -52,7 +51,7 @@ const MusicPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [volume, setVolume] = useState(75);
-  const [isShuffle, setIsShuffle] = useState(false);
+  const [isShuffle] = useState(false);
   const [repeat, setRepeat] = useState("repeat");
 
   const audioInputRef = useRef<HTMLInputElement>(null);
@@ -86,8 +85,10 @@ const MusicPage = () => {
       const formData = new FormData();
       formData.append("title", newSong.title);
       formData.append("artist", newSong.artist);
-      formData.append("audioFile", files.audio);
-      formData.append("imageFile", files.image);
+      if (files.audio && files.image) {
+        formData.append("audioFile", files.audio);
+        formData.append("imageFile", files.image);
+      }
 
       await axiosInstance.post("/songs/createSong", formData, {
         headers: {
@@ -115,7 +116,7 @@ const MusicPage = () => {
     }
   };
 
-  const handleSeek = (e) => {
+  const handleSeek = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (audioRef.current) {
       const value = Number(e.target.value);
       audioRef.current.currentTime = (value / 100) * audioRef.current.duration;
@@ -142,7 +143,7 @@ const MusicPage = () => {
     setCurrentSong(songs[prevIndex]);
   };
 
-  const handleVolume = (e) => {
+  const handleVolume = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (audioRef.current) {
       const value = Number(e.target.value);
       audioRef.current.volume = value / 100;
@@ -444,9 +445,11 @@ const MusicPage = () => {
                         {/* {song.title.length > 10
                           ? song.title.slice(0, 9) + "…"
                           : song.title} */}
-                          {song.title}
+                        {song.title}
                       </p>
-                      <h1 className="text-xl text-gray-700 truncate">{song.artist}</h1>
+                      <h1 className="text-xl text-gray-700 truncate">
+                        {song.artist}
+                      </h1>
                     </div>
                   </div>
                   {isPlaying && currentSong?._id === song._id ? (

@@ -1,6 +1,4 @@
-import React, { useState } from "react";
 import type { TodoType } from "@/types";
-import FilterTodos from "./FilterTodos";
 
 type Props = {
   todos: TodoType[];
