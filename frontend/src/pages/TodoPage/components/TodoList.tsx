@@ -1,5 +1,5 @@
 import type { TodoType } from "@/types";
-import type { FilterType } from "./TodoPage";
+import type { FilterType } from "../TodoPage";
 
 type Props = {
   todos: TodoType[];

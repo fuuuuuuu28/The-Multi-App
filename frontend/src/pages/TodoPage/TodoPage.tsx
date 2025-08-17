@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import TodoForm from "./TodoForm";
-import Stats from "./Stats";
-import FilterTodos from "./FilterTodos";
-import TodoList from "./TodoList";
+import TodoForm from "./components/TodoForm";
+import Stats from "./components/Stats";
+import FilterTodos from "./components/FilterTodos";
+import TodoList from "./components/TodoList";
 import { useTodoStore } from "@/stores/useTodoStore";
 
 export type FilterType = "all" | "active" | "completed";

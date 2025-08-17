@@ -6,7 +6,7 @@ type Props = {
 const TodoForm = ({ addTodo }: Props) => {
   const [inputValue, setInputValue] = useState("");
 
-  const handleButton = (task: string) => {
+  const handleButton = () => {
     addTodo(inputValue, false);
     setInputValue("");
   };
@@ -31,7 +31,7 @@ const TodoForm = ({ addTodo }: Props) => {
         />
         <button
           className="cursor-pointer bg-blue-500 text-white px-6 py-4 rounded-lg"
-          onClick={() => handleButton(inputValue)}
+          onClick={() => handleButton()}
         >
           Add
         </button>

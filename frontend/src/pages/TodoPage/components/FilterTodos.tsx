@@ -1,4 +1,4 @@
-import type { FilterType } from "./TodoPage";
+import type { FilterType } from "../TodoPage";
 
 type Props = {
   filter: FilterType;

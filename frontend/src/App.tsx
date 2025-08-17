@@ -1,10 +1,10 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import TodoPage from "./components/TodoPage/TodoPage";
-import ChatPage from "./components/ChatPage/ChatPage";
+import TodoPage from "./pages/TodoPage/TodoPage";
+import ChatPage from "./pages/ChatPage/ChatPage";
 import AuthProvider from "./providers/AuthProvider";
 import { AuthenticateWithRedirectCallback } from "@clerk/clerk-react";
-import MusicPage from "./components/MusicPage/MusicPage";
+import MusicPage from "./pages/MusicPage/MusicPage";
 import Layout from "./layout/Layout";
 
 function App() {
@@ -21,10 +21,10 @@ function App() {
         />
         <Route path="/auth-callback" element={<AuthProvider />} />
 
-        <Route path="/" element={<Layout />}>
-          <Route path="/todo" element={<TodoPage />} />
-          <Route path="/chat" element={<ChatPage />} />
-          <Route path="/music" element={<MusicPage />} />
+        <Route path="/The-Multi-App" element={<Layout />}>
+          <Route path="/The-Multi-App/todo" element={<TodoPage />} />
+          <Route path="/The-Multi-App/chat" element={<ChatPage />} />
+          <Route path="/The-Multi-App/music" element={<MusicPage />} />
         </Route>
 
       </Routes>

@@ -6,9 +6,9 @@ import {
   Music,
   XIcon,
 } from "lucide-react";
-import TodoPage from "@/components/TodoPage/TodoPage";
-import ChatPage from "@/components/ChatPage/ChatPage";
-import MusicPage from "@/components/MusicPage/MusicPage";
+import TodoPage from "@/pages/TodoPage/TodoPage";
+import ChatPage from "@/pages/ChatPage/ChatPage";
+import MusicPage from "@/pages/MusicPage/MusicPage";
 import { Button } from "@/components/ui/button";
 import { SignedIn, SignedOut, UserButton, useUser } from "@clerk/clerk-react";
 import SignInOAuth from "@/providers/SignInOAuth";
@@ -105,7 +105,7 @@ const Layout = () => {
 
             return (
               <Link
-                to={`/${tab.id}`}
+                to={`/The-Multi-App/${tab.id}`}
                 key={tab.id}
                 className={`w-full flex items-center gap-3 px-3 py-4 rounded-xl font-medium transition-all duration-300 group ${
                   isActive
@@ -166,7 +166,7 @@ const Layout = () => {
               {currentTab && <currentTab.icon className="text-white size-10" />}
             </div>
             <div className="text-center">
-              <h2 className={`text-2xl font-bold text-${currentTab?.color}-500`}>
+              <h2 className={`text-2xl font-bold text-${currentTab?.color}-500 `}>
                 {currentTab?.label}
               </h2>
               <p className="text-white/70">{currentTab?.title}</p>
