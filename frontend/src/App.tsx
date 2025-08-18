@@ -21,10 +21,10 @@ function App() {
         />
         <Route path="/auth-callback" element={<AuthProvider />} />
 
-        <Route path="/The-Multi-App" element={<Layout />}>
-          <Route path="/The-Multi-App/todo" element={<TodoPage />} />
-          <Route path="/The-Multi-App/chat" element={<ChatPage />} />
-          <Route path="/The-Multi-App/music" element={<MusicPage />} />
+        <Route path="/" element={<Layout />}>
+          <Route path="/todo" element={<TodoPage />} />
+          <Route path="/chat" element={<ChatPage />} />
+          <Route path="/music" element={<MusicPage />} />
         </Route>
 
       </Routes>
