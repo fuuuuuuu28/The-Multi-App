@@ -13,6 +13,7 @@ import songRouter from "./routes/song.route.js"
 import path from "path";
 dotenv.config();
 
+const PORT = process.env.PORT ||5000;
 const app = express();
 const __dirname = path.resolve();
 
@@ -44,7 +45,7 @@ app.use("/api/users", userRouter);
 app.use("/api/todo", todoRouter);
 app.use("/api/songs", songRouter)
 
-httpServer.listen(5000, () => {
+httpServer.listen(PORT, () => {
   console.log("is connecting");
 });
 // app.listen(5000, () => {
