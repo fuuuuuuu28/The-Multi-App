@@ -20,7 +20,7 @@ interface ChatStore {
   fetchMessages:(userId:string) =>Promise<void>;
   setSelectedUser: (user:UserType | null) => void;
 }
-const socket = io("http://localhost:5000", {
+const socket = io(import.meta.env.VITE_API_URL, {
   withCredentials: true,
 });
 
