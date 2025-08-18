@@ -24,7 +24,7 @@ connected();
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: ["http://localhost:5173", "https://the-multi-app.vercel.app"],
     credentials: true,
   })
 );
