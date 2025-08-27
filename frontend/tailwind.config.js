@@ -4,6 +4,14 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}", // ✅ Tailwind sẽ quét toàn bộ file trong src/
   ],
+  safelist: [
+    'bg-emerald-500',
+    'bg-blue-500', 
+    'bg-purple-500',
+    'text-emerald-500',
+    'text-blue-500',
+    'text-purple-500',
+  ],
   theme: {
     extend: {
       keyframes: {

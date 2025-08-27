@@ -6,7 +6,8 @@ import Userlist from "./components/Userlist";
 
 const ChatPage = () => {
   const { user } = useUser();
-  const { fetchMessages, fetchUser, selectedUser } = useChatStore();
+  const { fetchMessages, fetchUser, selectedUser, isMobileView } =
+    useChatStore();
 
   useEffect(() => {
     fetchUser();
@@ -19,8 +20,8 @@ const ChatPage = () => {
     }
   }, [fetchMessages, selectedUser]);
   return (
-    <div className=" rounded-2xl gap-3 py-3">
-      <div className="mx-auto px-5 max-w-6xl">
+    <div className=" rounded-2xl gap-3 py-3 ">
+      <div className="mx-auto px-5 max-w-6xl min-w-[350px] h-[700px] md:h-[550px]">
         {/* Header */}
         {/* <div className="text-center mb-6">
           <div className="flex items-center justify-center space-x-3 text-3xl font-bold bg-blue-500 text-transparent bg-clip-text mb-2">
@@ -32,11 +33,19 @@ const ChatPage = () => {
           <p className="text-gray-500">Trò chuyện với những người bạn</p>
         </div> */}
 
-        <div className="grid grid-cols-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 ">
           {/* User List */}
-          <Userlist />
+          <div className={`${isMobileView ? "hidden" : "block"} md:block`}>
+            <Userlist />
+          </div>
           {/* Chat Container */}
-          <ChatContainer />
+          <div
+            className={`${
+              isMobileView ? "block" : "hidden"
+            } md:block col-span-2 h-full`}
+          >
+            <ChatContainer />
+          </div>
         </div>
       </div>
     </div>

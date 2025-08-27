@@ -6,7 +6,7 @@ import { ArrowLeft, MoreVertical, Phone, Video } from "lucide-react";
 import { useState } from "react";
 
 const ChatContainer = () => {
-  const { messages, sendMessage, selectedUser } = useChatStore();
+  const { messages, sendMessage, selectedUser, clearSelectedUser } = useChatStore();
   const { user } = useUser();
   const [newMessage, setNewMessage] = useState("");
 
@@ -17,15 +17,18 @@ const ChatContainer = () => {
   };
 
   return (
-    <div className="bg-white col-span-2 min-h-[540px] rounded-r-2xl shadow-xl overflow-hidden flex flex-col justify-between">
+    <div className="bg-white min-w-[350px] h-[700px] md:h-[550px] rounded-r-2xl shadow-xl overflow-hidden flex flex-col justify-between">
       {/* Chat Header */}
       <div className="bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-between px-4 py-2">
         <div className="flex items-center gap-3">
-          <Button className="p-2 hover:bg-white/20 rounded-lg transition-colors">
+          <Button
+            className="p-2 hover:bg-white/20 rounded-lg transition-colors md:hidden"
+            onClick={clearSelectedUser}
+          >
             <ArrowLeft className="size-6 text-white" />
           </Button>
 
-          {selectedUser ? (
+          {selectedUser && (
             <div className="flex items-center gap-3">
               <div className="relative">
                 <div className="size-10 rounded-full flex justify-center items-center ">
@@ -42,25 +45,22 @@ const ChatContainer = () => {
                 <p className="text-white/80 text-xs">Online</p>
               </div>
             </div>
-          ) : (
-            <></>
           )}
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center md:gap-3">
           <Button className="p-2 hover:bg-white/20 rounded-lg transition-colors">
-            <Phone className="size-6 text-white" />
+            <Phone className="size-4 md:size-6 text-white" />
           </Button>
           <Button className="p-2 hover:bg-white/20 rounded-lg transition-colors">
-            <Video className="size-6 text-white" />
+            <Video className="size-4 md:size-6 text-white" />
           </Button>
           <Button className="p-2 hover:bg-white/20 rounded-lg transition-colors">
-            <MoreVertical className="size-6 text-white" />
+            <MoreVertical className="size-4 md:size-6 text-white" />
           </Button>
         </div>
       </div>
 
-      <div className="">
         {/* Chatbox-body */}
         <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
           {messages.map((message) => {
@@ -112,7 +112,6 @@ const ChatContainer = () => {
             Send
           </Button>
         </div>
-      </div>
     </div>
   );
 };

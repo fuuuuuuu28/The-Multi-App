@@ -87,7 +87,7 @@ const Layout = () => {
             >
               <span className="text-xl">🚀</span>
             </div>
-            <div>
+            <div className="min-w-0 flex-1">
               <h1 className="text-xl font-bold text-white">My App</h1>
               <span className="text-sm text-white/70">Dashboard</span>
             </div>
@@ -161,15 +161,15 @@ const Layout = () => {
 
       <div className="flex-1 flex flex-col min-h-screen">
         <div className="bg-white/10 backdrop-blur-lg border-b border-white/20 p-4">
-          <div className="flex items-center justify-center space-x-3">
-            <div className={`bg-${currentTab?.color}-500 p-3 rounded-2xl shadow-lg`}>
+          <div className="flex items-center justify-center space-x-5 mx-12 sm:space-x-3 ">
+            <div className={`bg-${currentTab?.color}-500 p-3 rounded-2xl shadow-lg `}>
               {currentTab && <currentTab.icon className="text-white size-10" />}
             </div>
-            <div className="text-center">
-              <h2 className={`text-2xl font-bold text-${currentTab?.color}-500 `}>
+            <div className="sm:text-center min-w-0">
+              <h2 className={`text-2xl font-bold text-${currentTab?.color}-500 truncate`}>
                 {currentTab?.label}
               </h2>
-              <p className="text-white/70">{currentTab?.title}</p>
+              <p className="text-white/70 max-w-full text-sm break-words">{currentTab?.title}</p>
             </div>
           </div>
         </div>

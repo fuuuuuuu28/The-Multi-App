@@ -6,21 +6,29 @@ import { create } from "zustand";
 interface ChatStore {
   isLoading: boolean;
   error: string | null;
-  users: UserType[] ;
+  users: UserType[];
   socket: any;
   isConnected: boolean;
   onlineUsers: Set<string>;
   messages: MessageType[];
   selectedUser: UserType | null;
+  isMobileView: boolean;
 
   fetchUser: () => Promise<void>;
   initialSocket: (userId: string) => Promise<void>;
   disconnected: () => void;
-  sendMessage: (senderId: string, content: string, receiverId:string) => void;
-  fetchMessages:(userId:string) =>Promise<void>;
-  setSelectedUser: (user:UserType | null) => void;
+  sendMessage: (senderId: string, content: string, receiverId: string) => void;
+  fetchMessages: (userId: string) => Promise<void>;
+  setSelectedUser: (user: UserType | null) => void;
+  clearSelectedUser:() =>void;
 }
-const socket = io(import.meta.env.VITE_API_URL, {
+
+const baseURL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:5000"
+    : import.meta.env.VITE_API_URL;
+const socket = io(baseURL, {
+  autoConnect: false, // only connect if user is authenticated
   withCredentials: true,
 });
 
@@ -33,11 +41,12 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   onlineUsers: new Set(),
   messages: [],
   selectedUser: null,
+  isMobileView: false,
 
   fetchUser: async () => {
     try {
       const res = await axiosInstance.get("/users/");
-      console.log("res user: ",res.data.users)
+      console.log("res user: ", res.data.users);
       set({ users: res.data.users });
     } catch (error: any) {
       set({ error: error.response.data.message });
@@ -73,18 +82,17 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         });
       });
 
-      socket.on("message_sent",(message:MessageType) =>{
+      socket.on("message_sent", (message: MessageType) => {
         set((state) => ({
-          messages: [...state.messages, message]
-        }))
-      })
+          messages: [...state.messages, message],
+        }));
+      });
 
-      socket.on("receiver_message",(message: MessageType) =>{
-        set((state) =>({
-          messages:[...state.messages, message]
-        }))
-      })
-
+      socket.on("receiver_message", (message: MessageType) => {
+        set((state) => ({
+          messages: [...state.messages, message],
+        }));
+      });
     }
   },
 
@@ -97,26 +105,35 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     }
   },
 
-  sendMessage: async(senderId, content, receiverId) =>{
+  sendMessage: async (senderId, content, receiverId) => {
     const socket = get().socket;
-    if(!socket) return;
+    if (!socket) return;
 
-    socket.emit("send_message",{senderId, content, receiverId})
+    socket.emit("send_message", { senderId, content, receiverId });
   },
 
-  fetchMessages:async(userId) =>{
+  fetchMessages: async (userId) => {
     try {
-      const res =await axiosInstance.get(`/users/messages/${userId}`)
-      console.log("res messages: ", res.data)
+      const res = await axiosInstance.get(`/users/messages/${userId}`);
+      console.log("res messages: ", res.data);
       set({ messages: res.data });
-		} catch (error: any) {
-			set({ error: error.response.data.message });
-		} finally {
-			set({ isLoading: false });
-		}
+    } catch (error: any) {
+      set({ error: error.response.data.message });
+    } finally {
+      set({ isLoading: false });
+    }
   },
 
-  setSelectedUser:(user) => {
-    set({selectedUser: user})
-  }
+  setSelectedUser: (user) =>
+    set(() => ({
+      selectedUser: user,
+      // Nếu chọn user thì chuyển sang ChatContainer
+      isMobileView: !!user,
+    })),
+
+  clearSelectedUser: () =>
+    set(() => ({
+      selectedUser: null,
+      isMobileView: false,
+    })),
 }));
