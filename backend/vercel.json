@@ -11,5 +11,5 @@
       "use": "@vercel/static"
     }
   ],
-  "rewrites": [{ "src": "/(.*)", "dest": "/" }]
+  "routes": [{ "src": "/(.*)", "dest": "/" }]
 }
