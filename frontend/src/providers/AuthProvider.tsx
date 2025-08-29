@@ -1,14 +1,20 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { axiosInstance } from "@/lib/axios";
-import { useUser } from "@clerk/clerk-react";
+import { useAuth, useClerk, useSignIn, useUser } from "@clerk/clerk-react";
 import { Loader } from "lucide-react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 const AuthProvider = () => {
   const { isLoaded, user } = useUser();
+  const auth = useAuth();
+  const sigin = useSignIn();
+  const clerk = useClerk();
   const navigate = useNavigate();
   console.log("user: ", user);
+  console.log("auth: ",auth)
+  console.log("sigin: ",sigin)
+  console.log("clerk: ",clerk)
 
   useEffect(() => {
     const syncUser = async () => {
