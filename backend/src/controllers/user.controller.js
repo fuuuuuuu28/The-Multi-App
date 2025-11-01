@@ -26,35 +26,38 @@ export const clerkProvider = async (req, res, next) => {
   }
 };
 
-export const getUsers = async (req, res, next) => {
+export const getProfile = async (req, res, next) => {
   try {
-    const clerkId = req.clerkId
-    // const users = await User.find({clerkId: {$ne: clerkId}}) // tất cả user trừ chính mình
-    const users = await User.find() // tất cả user 
-    if(!users){
-      throw new Error("Cannot find users")
+    const clerkId = req.clerkId;
+    const users = await User.find({ clerkId: { $ne: clerkId } })
+      .populate("lastMessage")
+      .sort({ lastMessageAt: -1 });
+
+    // console.log(users)
+    if (!users) {
+      throw new Error("Cannot find users");
     }
 
-    res.status(200).json({success:true, users})
+    res.status(200).json({ success: true, users });
   } catch (error) {
-    console.log("Error in getUser controllers: ", error)
-    next(error)
+    console.log("Error in getUser controllers: ", error);
+    next(error);
   }
 };
 
-export const getMessages = async(req,res,next) =>{
+export const getMessages = async (req, res, next) => {
   try {
-    const myId = req.clerkId
-    const { userId} = req.params;
+    const myId = req.clerkId;
+    const { userId } = req.params;
 
     const messages = await Message.find({
-      $or:[
-        {senderId: userId, receiverId: myId},
-        {senderId: myId, receiverId: userId}
-      ]
-    }).sort({ createdAt:1})
+      $or: [
+        { senderId: userId, receiverId: myId },
+        { senderId: myId, receiverId: userId },
+      ],
+    }).sort({ createdAt: 1 });
     res.status(200).json(messages);
-	} catch (error) {
-		next(error);
-	}
-}
+  } catch (error) {
+    next(error);
+  }
+};

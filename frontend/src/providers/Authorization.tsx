@@ -13,14 +13,16 @@ const updateApiToken = (token: string | null) => {
   }
 };
 const Authorization = ({ children }: { children: React.ReactNode }) => {
-  const { getToken, userId } = useAuth();
+  const { sessionId,getToken, userId } = useAuth();
+
+  // const sessionId = getToken[0].
   const [isLoading, setIsLoading] = useState(false);
   const { initialSocket, disconnected } = useChatStore();
 
   useEffect(() => {
     const initAuth = async () => {
       try {
-        const token = await getToken();
+        const token = await getToken({ template: "backend" });
         updateApiToken(token);
         if (token) {
           if (userId) initialSocket(userId);
@@ -35,7 +37,7 @@ const Authorization = ({ children }: { children: React.ReactNode }) => {
     initAuth();
 
     return () => disconnected();
-  }, [getToken, userId, initialSocket, disconnected]);
+  }, [getToken, userId, initialSocket, disconnected,sessionId]);
   if (isLoading) {
     return (
       <div className="h-screen w-full flex items-center justify-center">

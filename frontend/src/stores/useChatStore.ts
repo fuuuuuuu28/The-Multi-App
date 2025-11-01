@@ -20,7 +20,7 @@ interface ChatStore {
   sendMessage: (senderId: string, content: string, receiverId: string) => void;
   fetchMessages: (userId: string) => Promise<void>;
   setSelectedUser: (user: UserType | null) => void;
-  clearSelectedUser:() =>void;
+  clearSelectedUser: () => void;
 }
 
 const baseURL =
@@ -32,6 +32,13 @@ const socket = io(baseURL, {
   withCredentials: true,
 });
 
+function moveToTop(users: UserType[], userId: string) {
+  const idx = users.findIndex((user) => user.clerkId === userId);
+  if (idx === -1) return users;
+
+  const newUser = [users[idx], ...users.filter((_, i) => i !== idx)];
+  return newUser;
+}
 export const useChatStore = create<ChatStore>((set, get) => ({
   isLoading: false,
   error: null,
@@ -46,7 +53,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   fetchUser: async () => {
     try {
       const res = await axiosInstance.get("/users/");
-      console.log("res user: ", res.data.users);
+      // console.log("res user: ", res.data.users);
       set({ users: res.data.users });
     } catch (error: any) {
       set({ error: error.response.data.message });
@@ -85,12 +92,26 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       socket.on("message_sent", (message: MessageType) => {
         set((state) => ({
           messages: [...state.messages, message],
-        }));
+          users: moveToTop(state.users, message.receiverId),
+        }))
+      });
+
+      socket.on("last_message_updated", ({ senderId, receiverId, message }) => {
+        set((state) => {
+          const updatedUser = state.users.map((user) => {
+            if (user.clerkId === senderId || user.clerkId === receiverId) {
+              return { ...user, lastMessage: message };
+            }
+            return user;
+          });
+          return { users: updatedUser };
+        });
       });
 
       socket.on("receiver_message", (message: MessageType) => {
         set((state) => ({
-          messages: [...state.messages, message],
+          messages:[...state.messages, message],
+          users: moveToTop(state.users, message.senderId)
         }));
       });
     }
@@ -99,7 +120,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   disconnected: () => {
     if (get().isConnected) {
       socket.disconnect();
-      console.log("disconnected", socket.disconnect());
+      console.log("disconnection", socket.disconnect());
 
       set({ isConnected: false });
     }
@@ -115,7 +136,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   fetchMessages: async (userId) => {
     try {
       const res = await axiosInstance.get(`/users/messages/${userId}`);
-      console.log("res messages: ", res.data);
+      // console.log("res messages: ", res.data);
       set({ messages: res.data });
     } catch (error: any) {
       set({ error: error.response.data.message });

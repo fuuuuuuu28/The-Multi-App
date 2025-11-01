@@ -3,6 +3,7 @@ export type UserType = {
     clerkId:string,
     fullName:string,
     image:string,
+    lastMessage:MessageType,
 }
 
 export type TodoType = {
@@ -16,6 +17,8 @@ export type MessageType = {
     senderId:string,
     content:string,
     receiverId:string,
+    createdAt:string,
+    updatedAt:string,
 }
 
 export type SongType = {

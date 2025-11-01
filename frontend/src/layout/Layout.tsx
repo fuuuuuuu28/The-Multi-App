@@ -17,12 +17,14 @@ import { Link } from "react-router-dom";
 const Layout = () => {
   const { user } = useUser();
 
-  const [activeTab, setActiveTab] = useState(() => sessionStorage.getItem("activeTab") || "chat");
+  const [activeTab, setActiveTab] = useState(
+    () => sessionStorage.getItem("activeTab") || "chat"
+  );
   const [sideBarOpen, setSideBarOpen] = useState(false);
 
-  useEffect(()=>{
-    sessionStorage.setItem("activeTab", activeTab)
-  }, [activeTab])
+  useEffect(() => {
+    sessionStorage.setItem("activeTab", activeTab);
+  }, [activeTab]);
 
   const tabs = [
     {
@@ -67,7 +69,7 @@ const Layout = () => {
   const currentTab = tabs.find((tab) => tab.id === activeTab);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500 flex">
+    <div className="min-h-screen bg-gradient-to-br from-blue-500 via-purple-500 to-pink-500">
       <Button
         className="fixed top-4 left-4 z-40 bg-white rounded-lg p-2 shadow-lg"
         onClick={() => setSideBarOpen(!sideBarOpen)}
@@ -159,25 +161,29 @@ const Layout = () => {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col min-h-screen">
-        <div className="bg-white/10 backdrop-blur-lg border-b border-white/20 p-4">
+      <div className="flex flex-col min-h-screen">
+        <div className="w-full h-[80px] fixed bg-white/10 backdrop-blur-lg border-b border-white/20 p-2">
           <div className="flex items-center justify-center space-x-5 mx-12 sm:space-x-3 ">
-            <div className={`bg-${currentTab?.color}-500 p-3 rounded-2xl shadow-lg `}>
+            <div
+              className={`bg-${currentTab?.color}-500 p-3 rounded-2xl shadow-lg `}
+            >
               {currentTab && <currentTab.icon className="text-white size-10" />}
             </div>
             <div className="sm:text-center min-w-0">
-              <h2 className={`text-2xl font-bold text-${currentTab?.color}-500 truncate`}>
+              <h2
+                className={`text-2xl font-bold text-${currentTab?.color}-500 truncate`}
+              >
                 {currentTab?.label}
               </h2>
-              <p className="text-white/70 max-w-full text-sm break-words">{currentTab?.title}</p>
+              <p className="text-white/70 max-w-full text-sm break-words">
+                {currentTab?.title}
+              </p>
             </div>
           </div>
         </div>
 
-        <div className="flex-1 p-6">
-          <div className="h-full transition-all duration-300 ease-in-out">
-            {renderContent()}
-          </div>
+        <div className="mt-[100px] mx-5 ">
+          {renderContent()}
         </div>
       </div>
     </div>

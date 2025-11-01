@@ -1,14 +1,18 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { useChatStore } from "@/stores/useChatStore";
 import { useUser } from "@clerk/clerk-react";
 import { ArrowLeft, MoreVertical, Phone, Video } from "lucide-react";
 import { useState } from "react";
 
 const ChatContainer = () => {
-  const { messages, sendMessage, selectedUser, clearSelectedUser } = useChatStore();
+  const { messages, sendMessage, selectedUser, clearSelectedUser } =
+    useChatStore();
   const { user } = useUser();
   const [newMessage, setNewMessage] = useState("");
+
+
 
   const handleSend = () => {
     if (!user?.id || !selectedUser?.clerkId) return;
@@ -16,102 +20,85 @@ const ChatContainer = () => {
     setNewMessage("");
   };
 
+    const handlePress = (e: React.KeyboardEvent) => {
+      if (e.key === "Enter") {
+        handleSend();
+        setNewMessage('')
+      }
+    };
+
   return (
-    <div className="bg-white min-w-[350px] h-[700px] md:h-[550px] rounded-r-2xl shadow-xl overflow-hidden flex flex-col justify-between">
-      {/* Chat Header */}
-      <div className="bg-gradient-to-br from-purple-500 to-blue-500 flex items-center justify-between px-4 py-2">
+    <div className="flex flex-1 flex-col h-full ">
+      {/* Header */}
+      <div className="flex items-center justify-between md:px-5 py-3 px-2 border-b border-zinc-800 bg-[#0B0B0B]">
         <div className="flex items-center gap-3">
-          <Button
-            className="p-2 hover:bg-white/20 rounded-lg transition-colors md:hidden"
-            onClick={clearSelectedUser}
-          >
-            <ArrowLeft className="size-6 text-white" />
-          </Button>
-
-          {selectedUser && (
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="size-10 rounded-full flex justify-center items-center ">
-                  <Avatar>
-                    <AvatarImage src={selectedUser?.image} />
-                  </Avatar>
-                </div>
-                <div className="absolute bg-green-400 size-4 -bottom-1 -right-1 border-2 border-white rounded-full"></div>
-              </div>
-              <div>
-                <h3 className="text-white font-medium">
-                  {selectedUser?.fullName}
-                </h3>
-                <p className="text-white/80 text-xs">Online</p>
-              </div>
-            </div>
-          )}
-        </div>
-
-        <div className="flex items-center md:gap-3">
-          <Button className="p-2 hover:bg-white/20 rounded-lg transition-colors">
-            <Phone className="size-4 md:size-6 text-white" />
-          </Button>
-          <Button className="p-2 hover:bg-white/20 rounded-lg transition-colors">
-            <Video className="size-4 md:size-6 text-white" />
-          </Button>
-          <Button className="p-2 hover:bg-white/20 rounded-lg transition-colors">
-            <MoreVertical className="size-4 md:size-6 text-white" />
-          </Button>
+          <Button onClick={clearSelectedUser}>
+            <ArrowLeft className="size-8 text-white"/>
+             </Button>
+          <Avatar className="size-10">
+            <AvatarImage src={selectedUser?.image}/>
+          </Avatar>
+          <div>
+            <h3 className="text-white text-lg font-semibold">{selectedUser?.fullName}</h3>
+            {/* <span className="text-gray-500 text-sm">
+              Last active 2 hours ago
+            </span> */}
+          </div>
         </div>
       </div>
 
-        {/* Chatbox-body */}
-        <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-          {messages.map((message) => {
-            const isSelf = message.senderId === user?.id;
-            return (
-              <div
-                key={message._id}
-                className={`flex ${isSelf ? "justify-end" : "justify-start"}`}
-              >
-                <div
-                  className={`max-w-[70%] p-3 rounded-2xl shadow-md ${
-                    isSelf
-                      ? "bg-blue-500 text-white rounded-br-none"
-                      : "bg-gray-200 text-gray-800 rounded-bl-none"
-                  }`}
-                >
-                  <div className="flex items-center gap-2 mb-1">
-                    {!isSelf && (
-                      <Avatar className="size-6">
-                        <AvatarImage src={user?.imageUrl || ""} />
-                      </Avatar>
-                    )}
-                    <span className="text-xs text-gray-400">
-                      {isSelf ? "Bạn" : "Người khác"} - 11:46
-                    </span>
-                  </div>
-                  <p className="text-sm">{message.content}</p>
-                  <span className="text-[10px] text-right block text-gray-300 mt-1">
-                    Delivered
-                  </span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+      {/* Messages */}
+      <ScrollArea className="h-[calc(100vh-280px)]">
+        <div className="p-4 space-y-4">
+          {messages.map((message, index) => (
+            <div
+              key={`${message._id}-${index}`}
+              className={`flex items-start gap-3 ${
+                message.senderId ? "flex-row-reverse" : ""
+              }`}
+            >
+              {/* <Avatar className='size-8'>
+												<AvatarImage
+													src={
+														message.senderId === user?._id
+															? user.imageUrl
+															: selectedUser.imageUrl
+													}
+												/>
+											</Avatar> */}
 
-        <div className="flex items-center p-4">
-          <input
-            type="text"
-            placeholder="Type your message..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-4 py-2"
-          />
-          <Button
-            onClick={handleSend}
-            className="ml-2 rounded-lg bg-purple-500 px-4 py-2 text-white"
-          >
-            Send
-          </Button>
+              <div
+                className={`rounded-lg p-3 max-w-[70%]
+													${message.senderId ? "bg-green-500" : "bg-zinc-800"}
+												`}
+              >
+                <p className="text-sm">{message.content}</p>
+                {/* <span className='text-xs text-zinc-300 mt-1 block'>
+													{(message.createdAt)}
+												</span> */}
+              </div>
+            </div>
+          ))}
         </div>
+      </ScrollArea>
+
+      {/* Input */}
+      <div className="flex items-center gap-3 border-t border-zinc-800 px-5 py-3 bg-[#0B0B0B]">
+        <input
+          type="text"
+          value={newMessage}
+          onChange={(e) => setNewMessage(e.target.value)}
+          onKeyPress={handlePress}
+          placeholder="Aa"
+          className="flex-1 bg-zinc-900 rounded-full px-4 py-2 text-gray-200 focus:outline-none"
+        />
+        <button
+          onClick={handleSend}
+          className="p-2 bg-blue-600 hover:bg-blue-500 rounded-full text-white"
+        >
+          <ArrowLeft />
+        </button>
+      </div>
     </div>
   );
 };

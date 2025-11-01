@@ -4,8 +4,9 @@ import { User } from "../models/user.model.js";
 export const getUser = async (req, res, next) => {
   try {
     const { userId } = getAuth(req);
+    // console.log("getAuth:", getAuth(req));
     if (!userId) {
-      throw new Error("Cannot parse userId from Clerk");
+      throw new Error("Cannot find clerkId");
     }
 
     const hasUser = await User.findOne({ clerkId: userId });
@@ -22,7 +23,7 @@ export const getUser = async (req, res, next) => {
 };
 
 export const protectAuth = async (req, res, next) => {
-  if (!req.auth()) {
+  if (!req.auth.userId) {
     return res.status(400).json({ message: "Unauthorized - you must log in" });
   }
   next();

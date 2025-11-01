@@ -22,6 +22,7 @@ initializeSocket(httpServer);
 
 connected();
 
+app.use(clerkMiddleware());
 app.use(
   cors({
     origin: process.env.NODE_ENV === 'production' ? process.env.CLIENT_URL : "http://localhost:5173",
@@ -29,7 +30,6 @@ app.use(
   })
 );
 app.use(express.json());
-app.use(clerkMiddleware());
 app.use(
   fileUpload({
     useTempFiles: true,

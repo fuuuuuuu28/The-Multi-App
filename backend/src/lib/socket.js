@@ -1,6 +1,7 @@
 import { Server } from "socket.io";
 import { Message } from "../models/message.model.js";
 import dotenv from "dotenv";
+import { User } from "../models/user.model.js";
 dotenv.config();
 
 export const initializeSocket = (server) => {
@@ -12,7 +13,6 @@ export const initializeSocket = (server) => {
   });
 
   const userSockets = new Map();
-  // const userActivities = new Map();
 
   io.on("connection", (socket) => {
     console.log("socket server connection:", socket.id);
@@ -35,11 +35,26 @@ export const initializeSocket = (server) => {
           receiverId,
         });
 
+        await Promise.all([
+          User.findOneAndUpdate(
+            { clerkId: senderId },
+            { lastMessage: message._id, lastMessageAt: message.createdAt },
+            { new: true }
+          ),
+          User.findOneAndUpdate(
+            { clerkId: receiverId },
+            { lastMessage: message._id, lastMessageAt: message.createdAt },
+            { new: true }
+          ),
+        ]);
+
         const receiverSocketId = userSockets.get(receiverId);
         if (receiverSocketId) {
           io.to(receiverSocketId).emit("receiver_message", message);
         }
         socket.emit("message_sent", message);
+
+        io.emit("last_message_updated", { senderId, receiverId, message });
       } catch (error) {
         console.error("Message error: ", error);
         socket.emit("message_error", error.message);

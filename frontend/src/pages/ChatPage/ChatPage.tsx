@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useUser } from "@clerk/clerk-react";
 import { useChatStore } from "@/stores/useChatStore";
 import ChatContainer from "./components/ChatContainer";
@@ -6,7 +6,7 @@ import Userlist from "./components/Userlist";
 
 const ChatPage = () => {
   const { user } = useUser();
-  const { fetchMessages, fetchUser, selectedUser, isMobileView } =
+  const { fetchMessages, fetchUser, selectedUser } =
     useChatStore();
 
   useEffect(() => {
@@ -17,37 +17,28 @@ const ChatPage = () => {
     // setSelectedUser(user?.id)
     if (selectedUser?.clerkId) {
       fetchMessages(selectedUser.clerkId);
+      console.log("first");
     }
   }, [fetchMessages, selectedUser]);
   return (
-    <div className=" rounded-2xl gap-3 py-3 ">
-      <div className="mx-auto px-5 max-w-6xl min-w-[350px] h-[700px] md:h-[550px]">
-        {/* Header */}
-        {/* <div className="text-center mb-6">
-          <div className="flex items-center justify-center space-x-3 text-3xl font-bold bg-blue-500 text-transparent bg-clip-text mb-2">
-            <div className="p-3 bg-blue-500 rounded-xl shadow-lg">
-              <MessageCircleMore className="size-5 text-white" />
-            </div>
-            <h1 className="">CHAT WITH FRIENDS</h1>
-          </div>
-          <p className="text-gray-500">Trò chuyện với những người bạn</p>
-        </div> */}
-
-        <div className="grid grid-cols-1 md:grid-cols-3 ">
-          {/* User List */}
-          <div className={`${isMobileView ? "hidden" : "block"} md:block`}>
-            <Userlist />
-          </div>
-          {/* Chat Container */}
-          <div
-            className={`${
-              isMobileView ? "block" : "hidden"
-            } md:block col-span-2 h-full`}
-          >
-            <ChatContainer />
-          </div>
-        </div>
+    <div className="flex w-full min-h-[650px]">
+      <div
+        className={`${
+          selectedUser ? "hidden md:flex" : "flex"
+        } w-full md:w-[320px] bg-[#0B0B0B] border-r border-zinc-800`}
+      >
+        <Userlist />
       </div>
+
+      
+       <div
+        className={`${
+          selectedUser ? "flex" : "hidden md:flex"
+        } flex-1 bg-[#090909]`}
+      >
+        <ChatContainer />
+      </div>
+      
     </div>
   );
 };
